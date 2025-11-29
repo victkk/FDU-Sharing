@@ -16,6 +16,7 @@ dist/
 .vscode/
 *.swp
 *.swo
+.cursor/
 
 # OS
 .DS_Store
@@ -35,3 +36,5 @@ yarn-error.log*
 # Vercel
 .vercel
 
+# Debug
+*.log

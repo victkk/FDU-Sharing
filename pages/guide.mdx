@@ -2,9 +2,9 @@
 
 ## 📥 如何下载资料
 
-1. 在左侧导航栏选择课程
-2. 找到你需要的资料
-3. 点击下载按钮即可
+1. 使用页面顶部的**全局搜索**（快捷键 `Ctrl+K`）搜索课程名
+2. 或在左侧导航栏选择课程
+3. 找到你需要的资料，点击下载按钮即可
 
 ---
 
@@ -14,34 +14,58 @@
 
 ### 情况一：为已有课程添加资料
 
-如果你要贡献的课程**已经存在**（如数据结构、操作系统等），只需两步：
+如果你要贡献的课程**已经存在**，只需两步：
 
 #### 步骤 1：上传资料文件
 
-将你的文件放入对应课程目录：
+将你的文件放入对应课程的资料目录（中文名）：
 
 ```
-public/resources/课程名/你的文件.pdf
+public/resources/课程中文名/你的文件.pdf
 ```
 
 例如：
 ```
-public/resources/data-structure/2024-期末-试卷.pdf
-public/resources/operating-system/2024-复习-重点总结.pdf
+public/resources/数据结构/2024-期末-试卷.pdf
+public/resources/线性代数/2024-复习-重点总结.pdf
 ```
 
 #### 步骤 2：编辑课程页面
 
-打开对应的课程页面文件 `pages/courses/课程名.mdx`，在合适的位置添加：
+打开对应的课程页面文件（拼音名）`pages/courses/拼音名.mdx`，在合适的位置添加：
 
 ```mdx
 <FileDownload 
   name="2024年期末试卷" 
-  path="/resources/data-structure/2024-期末-试卷.pdf" 
+  path="/resources/数据结构/2024-期末-试卷.pdf" 
 />
 ```
 
 然后提交 PR 即可！
+
+> 💡 **为什么页面文件用拼音？** Next.js 对中文路由的支持存在编码问题，使用拼音可以避免 404 错误，同时保证 GitHub 和 Vercel 部署的稳定性。侧边栏导航仍然显示中文标题。
+
+**现有课程文件名对照表：**
+
+| 课程 | 资料目录 | 页面文件 |
+|------|----------|----------|
+| 数学分析B | `数学分析B/` | `shuxuefenxiB.mdx` |
+| 线性代数 | `线性代数/` | `xianxingdaishu.mdx` |
+| 高等线性代数 | `高等线性代数/` | `gaodengxianxingdaishu.mdx` |
+| 概率论与数理统计 | `概率论与数理统计/` | `gailulun.mdx` |
+| 集合与图论 | `集合与图论/` | `jiheyutulun.mdx` |
+| 最优化方法 | `最优化方法/` | `zuiyouhua.mdx` |
+| 大学物理 | `大学物理/` | `daxuewuli.mdx` |
+| 电路基础 | `电路基础/` | `dianlujichu.mdx` |
+| 程序设计 | `程序设计/` | `chengxusheji.mdx` |
+| 面向对象程序设计 | `面向对象程序设计/` | `oop.mdx` |
+| 数据结构 | `数据结构/` | `shujujiegou.mdx` |
+| 算法设计与分析 | `算法设计与分析/` | `suanfa.mdx` |
+| 计算机组成与体系结构 | `计算机组成与体系结构/` | `jisuanjizucheng.mdx` |
+| 数据库引论 | `数据库引论/` | `shujukuyinlun.mdx` |
+| 腾飞先导课 | `腾飞先导课/` | `tengfeixiandao.mdx` |
+| 近代史纲要 | `近代史纲要/` | `jindaishi.mdx` |
+| 习概 | `习概/` | `xigai.mdx` |
 
 ---
 
@@ -51,23 +75,19 @@ public/resources/operating-system/2024-复习-重点总结.pdf
 
 #### 步骤 1：创建资料目录
 
-在 `public/resources/` 下创建新的课程目录：
+在 `public/resources/` 下创建新的课程目录（用中文名）：
 
 ```
-public/resources/新课程名/
+public/resources/编译原理/
 ```
-
-例如：`public/resources/compiler/`（编译原理）
 
 #### 步骤 2：创建课程页面
 
-在 `pages/courses/` 下创建新的 `.mdx` 文件，可以复制已有课程页面作为模板：
+在 `pages/courses/` 下创建新的 `.mdx` 文件（用拼音名），可以复制已有课程页面作为模板：
 
 ```
-pages/courses/新课程名.mdx
+pages/courses/bianyiyuanli.mdx
 ```
-
-例如：`pages/courses/compiler.mdx`
 
 页面模板：
 
@@ -75,25 +95,15 @@ pages/courses/新课程名.mdx
 import { FileDownload } from '@/components/FileDownload'
 import { Comments } from '@/components/Comments'
 
-# 📚 课程名称
+# 📚 编译原理
 
-> 本页面收集了XXX课程的相关资料
-
-## 课程信息
-
-| 项目 | 内容 |
-|------|------|
-| 课程名称 | XXX |
-| 学分 | X |
-| 建议学期 | 大X上/下 |
-
----
+> 本页面收集了编译原理课程的相关资料
 
 ## 📝 期末考试
 
 <FileDownload 
   name="2024年期末试卷" 
-  path="/resources/新课程名/2024-期末-试卷.pdf" 
+  path="/resources/编译原理/2024-期末-试卷.pdf" 
 />
 
 ---
@@ -115,11 +125,8 @@ import { Comments } from '@/components/Comments'
 
 ```ts
 export default {
-  'data-structure': '📊 数据结构',
-  'operating-system': '💻 操作系统',
-  'computer-network': '🌐 计算机网络',
-  'database': '🗄️ 数据库系统',
-  'compiler': '⚙️ 编译原理'  // 新增这一行
+  // ... 其他课程
+  'bianyiyuanli': '⚙️ 编译原理'  // 新增这一行
 }
 ```
 

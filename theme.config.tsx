@@ -7,6 +7,9 @@ const config: DocsThemeConfig = {
       📚 FDU CS 资料共享
     </span>
   ),
+  search: {
+    placeholder: '搜索课程...',
+  },
   project: {
     link: 'https://github.com/你的用户名/FDU-Sharing',
   },

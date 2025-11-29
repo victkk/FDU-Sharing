@@ -1,0 +1,5 @@
+p1: (0, 0)
+p2: (3, 4)
+p3: (3, 4)
+Line length: 5
+Line2 length: 5
