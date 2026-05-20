@@ -61,4 +61,5 @@ export default {
   'zhongwaiyinyueshenmei': '📚 中外音乐审美',
   'xianqinzhexue': '📚 先秦哲学',
   'yingshijuyishu': '🎬 影视剧艺术',
+  'tantanfangfa': '📚 笛卡尔《谈谈方法》导读',
 }
