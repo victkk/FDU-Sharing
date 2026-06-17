@@ -1,0 +1,20 @@
+设计一个点Point类，在此基础上用继承方式设计一个线段Line类。要求实现构造函数、复制构造函数，在Point类中重载+、<<、=运算符，在Line类中实现计算线段长度的length()函数。
+以下为测试程序（头文件和using声明省略）：
+int main() {
+    Point p1(0, 0);
+    Point p2(3, 4);
+    Point p3 = p1 + p2;
+
+    cout << "p1: " << p1 << endl;
+    cout << "p2: " << p2 << endl;
+    cout << "p3: " << p3 << endl;
+
+    Line line(p1, p2);
+    Line line2(line);
+
+    cout << "Line length: " << line.length() << endl;
+    cout << "Line2 length: " << line2.length() << endl;
+
+    system("pause");
+    return 0;
+}

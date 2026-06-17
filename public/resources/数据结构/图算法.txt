@@ -1,0 +1,98 @@
+class Edge{
+public:
+    int dest;//目的顶点（无向图当作双向有向图！！）
+    int weight;
+    Edge* link;//链表结构，但是指示的是同一起点的边！！
+};
+
+class Vertex{
+public:
+    char name;
+    Edge* adj;//附属边链表！！
+    Vertex(char n = 'A', Edge* a = NULL){name = n; adj = a;}
+};
+
+class graph{
+public:
+    Vertex* table;//顶点数组！！！
+    int sz;
+};
+
+一.普通DFS
+void DFS(graph g, int v, tree_node* root, vector<bool>& check){//参数有v！！！！
+    check[v]= true;
+    Edge* iter = ((g.table)[v]).adj;
+    int neighbor = iter->dest;
+    while(iter!=NULL){
+        neighbor = iter->dest;//别忘了更新neighbor！！！放在最前面防止引用空指针！！！
+        if(check[neighbor]==false){
+            DFS(g,neighbor, root, check);//未访问才要DFS！！！
+        }
+        iter = iter->link;//无论访问与否都要link！！！
+    }
+}
+
+二.图算法的变量规范：
+    //Vertex V1=table[v1];
+    Edge* iter1 = table[v1].adj;
+    //Vertex V2=table[v2];
+    Edge* iter2 = table[v2].adj;
+设边不设点！！！因为边是指针，点是对象！！对点的操作行为不会传递！！！
+
+
+三.修正后的DFS，构造左孩子右兄弟存储森林
+void DFS(graph g, int v, tree_node* root, vector<bool>& check){
+    cout<<g.table[v].name<<" ";
+    check[v]= true;//访问该节点，标志位设置
+    Edge* iter = ((g.table)[v]).adj;
+
+    int cnt = 0;//指示第几个孩子
+    while(iter!=NULL){//遍历根节点所有孩子,逐个递归DFS
+        int destination = iter->dest;
+        if(check[destination]==false){
+            if(cnt == 0){
+                build(root,g.table[destination].name,0);//0表示左孩子插入
+                DFS(g,destination, root->lchild, check);//root变为新加入的节点
+                ++cnt;
+            }
+            else{
+                tree_node* temp = find_pos(root);
+                build(temp,g.table[destination].name,1);//1表示右孩子插入
+                DFS(g,destination,temp->rchild,check);//root变为新加入的节点
+                ++cnt;
+            }
+        }
+        iter = iter->link;//根节点的下一个孩子
+    }
+}
+1.添加cnt变量，指示是第几个孩子
+2.添加build和find_pos函数，找左子树中序下最后一个节点插入
+3.深度递归时更新root，这样build就可以总是在root处插入。
+
+注意：对空树的赋值应当在主函数完成，因为NULL并非确定的内存空间！！！
+
+四.Dijkstra算法
+1.新建数据结构，每个点都加上权重
+2.Dist函数，计算“任意”“邻接”两点间距。用Vertex参数，不用i,j！！！
+
+int Dist(const graph& g,Vertex v1,Vertex v2){
+    Edge* iter = v1.adj;//遍历v1的邻接点
+    char target=v2.name;
+    while(iter){
+        if(g.table[iter->dest].name==target)
+            return iter->weight;
+        iter = iter->link;
+    }
+    return 1000;
+}
+
+3.target数组和Select数组（集合也行），核心三步！！！
+    for(int i = 0;i<g.sz-1;++i){//遍历target中各点，每次塞一个
+        int pos = find_min(target);
+
+        Vertex temp = target[pos];
+        target.erase(target.begin()+pos);
+        select.push_back(temp);
+
+        update(g,temp,target);
+    }

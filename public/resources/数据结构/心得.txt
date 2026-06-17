@@ -1,0 +1,122 @@
+0、该死的PJ！！！Linux下的换行有个'\r'！！要不是gdb完全发现不了，gdb永远滴神！！！！！注意g++时候要-g -o，gcc就不用
+1、判断是否完全二叉树：
+（1）若左右子健全，无法判断，入列
+（2）有左无右，判断错误
+（3）有右无左/左右皆无：进入循环，判断此后是否都是叶节点    
+while (!q.empty()) {
+        node* p = q.front();
+        q.pop();
+        if (p->lchild && p->rchild) {
+            q.push(p->lchild);
+            q.push(p->rchild);
+        }
+        else if (p->rchild && p->lchild == NULL) {
+            cout << "no";
+            return 0;
+        }
+
+        else
+        {
+            if (p->lchild && p->rchild == NULL)
+                q.push(p->lchild);
+            while (!q.empty())
+            {
+                p = q.front();
+                q.pop();
+                if (p->lchild || p->rchild) {
+                    cout << "no";
+                    return 0;
+                }
+            }
+
+        }
+    }
+2、用局部序列构建二叉树
+（1）、仿照层次遍历，但是用节点数目控制
+（2）、两次查找，先左后右，得者移除，否则流毒无穷
+（3）、队列清空，以待后观
+
+    queue<node*> q;
+    q.push(root);
+    for(int i=0;i<n-1;++i){
+        iter = q.front();
+        q.pop();
+        int target = iter->val;
+        for (int j = 0; j < v.size(); ++j) {
+            if (v[j].first == target) {
+                iter->lchild = new node(v[j].second);
+                q.push(iter->lchild);
+                v.erase(j + v.begin());
+            }
+        }
+        for (int j = 0; j < v.size(); ++j) {
+            if (v[j].second == target) {
+                iter->rchild = new node(v[j].first);
+                q.push(iter->rchild);
+                v.erase(j + v.begin());
+            }
+        }
+    }
+    while (!q.empty())
+        q.pop();
+
+3、给定先序中序，输出后序
+（1）、递归终止，查找范围为0
+（2）、中序的查找范围中查找先序第k个，并以此为根
+（3）、若有左子树，k自增，更新范围，递归，（k为引用）；此后右子树；最后输出该节点
+void print(int &k, int i, int j, string s1, string s2) {
+    if (i == j - 1) {
+        if(k!=s1.size())
+            cout << s1[k];
+        return;
+    }
+    char root = s1[k];
+    int pos = i;
+    for (; pos <= j; pos++) {
+        if (s2[pos] == root)
+            break;
+    }//一定找得到??
+    if (pos != i) {
+        ++k;
+        print(k, i, pos, s1, s2);
+    }
+
+    if (pos != j - 1) {
+        k++;
+        print(k, pos + 1, j, s1, s2);
+    }
+
+    cout << root;
+    return;
+}
+
+4、堆调整
+（1）、先交换其和堆尾元素！再删除堆尾！！
+（2）、向下调整后仍需向上调整，因直接祖先节点<待删元素!<末节点
+（向上调整时不用单独判断0！只需判定时>0，不能等防止死循环）
+
+5、非递归快速排序（队列实现）
+    int pos = Partition(0,num.size(),num);//初始化队列，先入根节点
+    unit u(pos,0,num.size());
+    q.push(u);
+
+    int l,r,p;
+    int cnt = (num.size()%2)?num.size()-1:num.size();//经验公式
+    for(int i = 0;i<cnt;++i){//希望进行的次数
+        unit temp = q.front();//取队首元素
+        q.pop();
+
+        l = temp.left;//将左半段的信息存入队列中
+        r = temp.pos;
+        p = Partition(l,r,num);
+        unit u1(p,l,r);
+        q.push(u1);
+
+
+
+        l = r + 1;//将右半段的信息存入队列中
+        r = temp.right;
+        p = Partition(l,r,num);
+        unit u2(p,l,r);
+        q.push(u2);
+    }

@@ -1,0 +1,71 @@
+中位数快速算法
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int main()
+{
+    vector<int> A,B;
+    int N = 2;
+    //读入两个序列A与B
+    for(int i = 0; i < N; ++i){
+        int temp;
+        cin >> temp;
+        A.push_back(temp);
+    }
+    for(int i=0;i<N;++i){
+        int temp;
+        cin >> temp;
+        B.push_back(temp);
+    }//分别代表AB序列的子串的start，end与middle，左闭右开截取子串
+    int sA = 0;
+    int sB = 0;
+    int eA = N;
+    int eB = N;
+    int midA = (N - 1)/2;
+    int midB = (N - 1)/2;
+    while(sA < eA && sB < eB){
+        if(sA == eA-1 && sB == eB-1){//当两个序列中都只剩1个元素时，输出较小值，结束程序
+            if(A[midA] > B[midB])
+                cout << B[midB];
+            else
+                cout << A[midA];
+            return 0;
+        }
+        if(A[midA] > B[midB]){//若A的中间值大于B的中间值，那么舍弃B的前半和A的后半（不包括中间值）
+            if((eA-sA) % 2 == 0)//注意分子列长度的奇偶讨论如何设置新的上下限
+                sB = midB + 1;
+            else
+                sB = midB;
+            eA = midA + 1;
+            midA = (sA + eA - 1)/2;//注意更新中间值索引
+            midB = (sB + eB - 1)/2;//这里对偶数个采用的是取前一个中间元素的取法，这是通过调试得出的结果
+        }
+        else{//反之亦然
+            if((eA - sA) % 2 == 0)
+                sA = midA + 1;
+            else
+                sB = midA;
+            eB = midB+1;
+            midB = (sB + eB - 1)/2;
+            midA = (sA + eA - 1)/2;
+        }
+    }
+    return 0;
+}
+
+二分答案：
+    while(l<r){
+        int mid=(l+r)/2;
+        if(check(mid,n,h)==true){
+            r = mid;
+        }
+        else{
+            l=mid+1;
+        }
+    }
+1.判断条件不取等
+2.左边更新应+1
+或者：
+1.左边更新不+1（可能是浮点数，步长不确定！！！）
+2.但判断条件要取等！！！

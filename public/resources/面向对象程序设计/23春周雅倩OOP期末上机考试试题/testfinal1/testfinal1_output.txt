@@ -1,0 +1,2 @@
+int result:1
+double result:3.1

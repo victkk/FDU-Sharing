@@ -1,0 +1,90 @@
+1、先序遍历代码：
+void BinaryTree::PreOrder(BiTNode *root){
+    stack<BiTNode*> s;
+    BiTNode* iter = root;
+
+    do{
+        while(iter!=NULL){
+            putchar(iter->data);
+            s.push(iter);
+            iter=iter->lchild;
+        }
+        iter=s.top();
+        s.pop();
+        iter=iter->rchild;
+    }while(iter!=NULL||!s.empty());
+}
+第一步：访问直到最左节点，并且不断入栈
+第二步：弹栈并进入右节点
+条件：弹出者不为NULL（保证末尾叶节点）或栈不为空（保证非末尾叶节点）
+
+2、得到X的先祖栈
+    stack<BiTNode*> s;
+    BiTNode* iter = root;
+    int flag=0;
+    BiTNode* pop_one=root;
+    if(root->data==X||root->data==Y)
+        return root;
+
+    do{
+        if(iter!=NULL&&iter->data==X){
+            s.push(pop_one);
+            break;
+        }
+        while(iter!=NULL){
+            if(iter->data==X){
+                flag=1;
+                break;
+            }
+            //putchar(iter->data);
+            s.push(iter);
+            iter=iter->lchild;
+        }
+        if(flag)//不用return是因为后面还要转移到vector中
+            break;
+        pop_one=iter=s.top();
+        s.pop();
+        iter=iter->rchild;
+
+    }while(iter!=NULL||!s.empty());
+思路：改造先序遍历，分情况讨论；如果是一路向左的时候遇到X，那此时栈就是先祖栈；若是pop出来的右孩子
+是X，那它离先祖栈就差那个刚刚pop出来的元素。
+
+3、最低祖先
+思路一 递归：（1）、判断XY是否互为祖先（2）、从根节点开始，若XY分列左右子树，则正是根节点；否则进入左、右子树递归，
+直到叶节点。
+注意点：可以先写一个“father”函数
+
+思路二 非递归：找出先祖栈，比较即可
+
+4、father函数
+改造先祖栈函数，在两个判断处返回pop_one或s.top()。
+
+5、广义表构造二叉树
+
+void CreateBinTree(istream &in, BinNode <char> *&BT){
+    stack<BinNode<char>*> s;
+    BinNode<char>* p,*t;
+    int k;
+    char ch;
+    in>>ch;
+    BT=NULL;
+    while(ch!='#'){
+        switch(ch){
+        case'(':s.push(p);k=1;break;//子树根节点入栈
+        case')':t=s.top();s.pop();break;
+        case',':k=2;break;
+        default:p=new BinNode<char>(ch);
+            if(BT==NULL) BT=p;
+            else if(k==1){
+                t=s.top();t->lchild=p;
+            }
+            else{
+                t=s.top();t->rchild=p;
+            }
+        }
+
+        in>>ch;
+    }
+    return;
+}

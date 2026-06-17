@@ -1,0 +1,67 @@
+###############################################################################
+# Git attributes
+# - Prevents "whole file changed" diffs caused by CRLF/LF conversions on Windows
+# - Keeps binary files from being treated as text
+###############################################################################
+
+# Default: treat files as text and normalize to LF in the repository.
+* text=auto eol=lf
+
+# Common source/text formats
+*.md          text eol=lf
+*.mdx         text eol=lf
+*.txt         text eol=lf
+*.ts          text eol=lf
+*.tsx         text eol=lf
+*.js          text eol=lf
+*.jsx         text eol=lf
+*.json        text eol=lf
+*.yml         text eol=lf
+*.yaml        text eol=lf
+*.toml        text eol=lf
+*.ini         text eol=lf
+*.css         text eol=lf
+*.scss        text eol=lf
+*.html        text eol=lf
+*.mjs         text eol=lf
+*.cjs         text eol=lf
+*.d.ts        text eol=lf
+
+# Shell scripts
+*.sh          text eol=lf
+
+# Windows scripts are usually CRLF
+*.bat         text eol=crlf
+*.cmd         text eol=crlf
+*.ps1         text eol=crlf
+
+# Images / media / archives / binaries
+*.pdf         binary
+*.doc         binary
+*.docx        binary
+*.ppt         binary
+*.pptx        binary
+*.xls         binary
+*.xlsx        binary
+*.png         binary
+*.jpg         binary
+*.jpeg        binary
+*.gif         binary
+*.webp        binary
+*.ico         binary
+*.mp3         binary
+*.mp4         binary
+*.mov         binary
+*.zip         binary
+*.7z          binary
+*.rar         binary
+*.gz          binary
+*.tar         binary
+*.tgz         binary
+*.bz2         binary
+*.exe         binary
+*.dll         binary
+*.ttf         binary
+*.otf         binary
+*.woff        binary
+*.woff2       binary

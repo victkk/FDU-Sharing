@@ -1,0 +1,16 @@
+按要求用c++实现一个简单的计算器类Calculator，该类包含以下成员：
+私有成员变量：
+当前结果（double result）；
+当前等式（string equation）；
+公有成员函数：
+构造函数：初始化当前结果为0，当前等式为空；
+加法函数：void add(double num)，将传入的num与当前结果相加，并更新当前结果和当前等式；
+减法函数：void subtract(double num)，将传入的num从当前结果中减去，并更新当前结果和当前等式；
+乘法函数：void multiply(double num)，将传入的num与当前结果相乘，并更新当前结果和当前等式；
+除法函数：void divide(double num)，将当前结果除以传入的num，并更新当前结果和当前等式；
+清零函数：void clear()，将计算器的结果和等式清零；
+打印函数：void printWithStars()，被当前等式放置在边框内部，并用星号边框围起来；
+获取当前结果的函数：double getResult()；
+
+请在附件中的Calculator.cpp和Calculator.h文件中添加代码，使程序完整。testfinal1_output.txt为testfinal1_input.txt为测试输入时的输出，仅供参考。请同学们使用这些测试数据来验证自己的程序。
+请把所有.cpp文件和.h文件打包压缩提交。
