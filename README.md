@@ -19,83 +19,28 @@
 
 ## 如何贡献
 
-我们欢迎所有同学贡献资料！
+我们欢迎所有同学贡献资料。请优先阅读 [.github/CONTRIBUTING.md](.github/CONTRIBUTING.md)，其中包含文件命名、课程页面、导航注册和 PR 检查清单。
 
-### 🚀 简便方式
+### 快速贡献
 
-使用我们提供的自动化脚本，一键贡献：
+1. Fork 本仓库；
+2. 将资料放入对应课程目录：`public/resources/课程中文名/`；
+3. 在对应课程页面 `pages/courses/课程拼音名.mdx` 中添加下载链接；
+4. 如果是新课程，同时更新 `pages/courses/_meta.ts`；
+5. 提交 Pull Request。
 
+也可以使用自动化脚本：
 
-# 1. Fork本仓库（重要！）
-访问 https://github.com/victkk/FDU-Sharing
-点击右上角 "Fork" 按钮
-
-# 2. 点击绿色的code按钮，点击codespaces，创建一个codespaces里
-
-# 3. 安装依赖
+```bash
 pip install -r scripts/requirements.txt
-
-# 4. 将资料放入 upload/ 目录
-
-# 5. 运行脚本
-```
 python scripts/easy_pr.py
 ```
 
-脚本会自动：
-- ✅ 识别课程和资料类型
-- ✅ 移动文件到正确位置
-- ✅ 更新网站页面
-- ✅ 创建 Pull Request
+脚本会辅助识别课程与资料类型、移动文件、更新页面并创建 Pull Request。
 
-详见：
-- [Easy PR 使用文档](/scripts/README.md)
-- [工作流程说明](/scripts/WORKFLOW.md)
+### AI Agent 辅助贡献
 
-
-我们欢迎所有同学贡献资料！对于大部分非CS相关的同学，你可以加我微信（vic_david）把资料发我让我挂出来。对于精通github的同学则可以通过以下方式贡献：
-
-### 🔧 手动PR
-
-1. **Fork** 本仓库
-2. 将资料文件放入 `public/resources/课程名/` 目录
-3. 在对应课程的 `.mdx` 文件中添加下载链接
-4. 提交 **Pull Request**
-
-详细步骤请查看 [使用与贡献指南](/pages/guide.mdx)
-
-
-
-## 🤖 AI Agent 辅助贡献
-
-如果你正在使用 AI 编程助手（如 Claude Code、GitHub Copilot Workspace 等），可以让 AI Agent 帮你快速完成贡献流程。
-
-### 使用方法
-
-将 [`Agent/AGENT_GUIDE.md`](Agent/AGENT_GUIDE.md) 文件的内容提供给 AI Agent，它将自动：
-
-- ✅ 识别课程和资料类型
-- ✅ 按规范移动文件到正确位置
-- ✅ 更新网站页面和导航
-- ✅ 创建 Git 提交和 PR
-
-### 示例提示词
-
-```
-请读取 Agent/AGENT_GUIDE.md 文件，然后帮我添加以下资料：
-- 课程：数据结构
-- 文件：/tmp/2024期末试卷.pdf
-- 类型：期末考试
-- 年份：2024
-```
-
-### 适用场景
-
-- 📝 不熟悉 Git 操作的同学
-- 🚀 快速批量添加资料
-- 🤖 自动化处理重复性工作
-
-**注意**：AI Agent 会直接操作你的仓库，请确保已 Fork 并拥有相应权限。
+如果使用 AI 编程助手，可以让它读取 `Agent/AGENT_GUIDE.md` 后按规范添加资料、更新页面并创建 PR。
 
 ## 免责声明
 
