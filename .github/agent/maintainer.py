@@ -47,7 +47,7 @@ def git(*args, **kwargs):
 
 
 def api(path, method='GET', data=None):
-    req = urllib.request.Request('https://api.github.com/repos/' + REPO + '/' + path,
+    req = urllib.request.Request('https://api.github.com/repos/' + REPO + ('/' + path if path else ''),
         data=json.dumps(data).encode() if data is not None else None, method=method,
         headers={'Authorization': 'Bearer ' + os.environ['GH_TOKEN'],
                  'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json',
