@@ -80,7 +80,7 @@ class AgentTests(unittest.TestCase):
                       'base': {'sha': base, 'ref': 'master'}, 'head': {'sha': head, 'ref': 'contributor'}}
                 answers = [{'resolved': True, 'files': [{'path': str(file), 'content': merged}]},
                            {'approve': True, 'summary': 'reviewed'}]
-                with patch.object(a, 'api', return_value={'default_branch': 'master'}), \
+                with patch.object(a, 'api', side_effect=lambda path: {'default_branch': 'master'} if not path else {'object': {'sha': base}}), \
                      patch.object(a, 'model', side_effect=answers), patch.object(a, 'outputs') as out:
                     a.prepare_pr(pr)
                 meta = out.call_args.kwargs['meta']

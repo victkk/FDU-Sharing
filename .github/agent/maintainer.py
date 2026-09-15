@@ -90,7 +90,11 @@ def model(task, data):
             break
         except urllib.error.HTTPError as e:
             if e.code not in (429, 500, 502, 503, 504) or attempt == 2:
-                raise RuntimeError(f'Model HTTP error {e.code}') from None
+                detail = e.read(4096).decode('utf-8', errors='replace')
+                detail = detail.replace(os.environ['OPENTOKEN_API_KEY'], '[REDACTED]')
+                if '<html' in detail.lower() or '<!doctype' in detail.lower():
+                    detail = 'HTML gateway/WAF rejection'
+                raise RuntimeError(f'Model HTTP error {e.code}: {detail[:700]}') from None
             time.sleep(5 * (attempt + 1))
     if response.get('status') != 'completed':
         raise RuntimeError('Model did not complete; refusing partial decision')
@@ -174,7 +178,9 @@ def prepare_pr(pr):
         return
     if pr['base']['ref'] != api('')['default_branch'] or pr['head']['ref'].startswith(PREFIX):
         return
-    base, head = pr['base']['sha'], pr['head']['sha']
+    current_base = api('git/ref/heads/' + urllib.parse.quote(pr['base']['ref'], safe=''))['object']['sha']
+    pr['base']['sha'] = current_base
+    base, head = current_base, pr['head']['sha']
     git('fetch', '--no-tags', '--filter=blob:none', 'origin', base, head)
     ancestor = git('merge-base', base, head).strip()
     changed = paths_between(ancestor, head)
@@ -295,6 +301,7 @@ def prepare():
         candidates = [api(f'pulls/{p["number"]}') for p in pages('pulls?state=open&sort=created&direction=asc')
                       if not p['draft'] and not p['head']['ref'].startswith(PREFIX)]
     for pr in candidates:
+        pr['base']['sha'] = api('git/ref/heads/' + urllib.parse.quote(pr['base']['ref'], safe=''))['object']['sha']
         if pr['draft'] or pr['state'] != 'open' or (not explicit and seen(pr)):
             continue
         try:
