@@ -1,0 +1,117 @@
+name: FDU Sharing Maintainer
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review]
+  issues:
+    types: [opened, edited, reopened]
+  issue_comment:
+    types: [created, edited]
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'Optional PR number to review again; blank scans open PRs/issues'
+        required: false
+        type: string
+
+# Serialize all merges and replies. Each run rechecks source/base before writing.
+concurrency:
+  group: fdu-sharing-maintainer
+  cancel-in-progress: false
+permissions: {}
+
+jobs:
+  prepare:
+    if: github.repository == 'victkk/FDU-Sharing' && github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: read
+    outputs:
+      candidate: ${{ steps.agent.outputs.candidate }}
+      meta: ${{ steps.agent.outputs.meta }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: master
+          fetch-depth: 0
+          filter: blob:none
+          sparse-checkout: |
+            .github/agent
+          persist-credentials: false
+      - name: Install temporary Git credential helper
+        run: |
+          git config credential.helper '!f() { echo username=x-access-token; echo "password=$GH_TOKEN"; }; f'
+          git config user.name victkk
+          git config user.email zhangzc.fdfz@gmail.com
+          git config core.quotePath false
+      - name: Review and prepare candidate
+        id: agent
+        env:
+          GH_TOKEN: ${{ github.token }}
+          OPENTOKEN_API_KEY: ${{ secrets.OPENTOKEN_API_KEY }}
+          OPENTOKEN_BASE_URL: ${{ vars.OPENTOKEN_BASE_URL }}
+          AGENT_MODEL: ${{ vars.AGENT_MODEL }}
+        run: python .github/agent/maintainer.py prepare
+
+  build:
+    needs: prepare
+    if: needs.prepare.outputs.candidate != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      # Public checkout: do not inject any token into the untrusted candidate checkout.
+      - name: Checkout exact reviewed candidate without credentials
+        env:
+          CANDIDATE: ${{ needs.prepare.outputs.candidate }}
+        run: |
+          git init .
+          git remote add origin https://github.com/victkk/FDU-Sharing.git
+          git -c protocol.version=2 fetch --depth=1 --filter=blob:none origin "$CANDIDATE"
+          git sparse-checkout set pages components
+          git checkout --detach FETCH_HEAD
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - name: Build site without secrets or write token
+        env:
+          NEXT_TELEMETRY_DISABLED: '1'
+        run: |
+          npm ci --ignore-scripts --registry=https://registry.npmjs.org
+          npm run build
+
+  finish:
+    needs: [prepare, build]
+    if: always() && needs.prepare.result == 'success' && needs.prepare.outputs.candidate != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: read
+      checks: read
+      statuses: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: master
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            .github/agent
+          persist-credentials: false
+      - name: Install temporary Git credential helper
+        run: |
+          git config credential.helper '!f() { echo username=x-access-token; echo "password=$GH_TOKEN"; }; f'
+      - name: Merge only the validated candidate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CANDIDATE_META: ${{ needs.prepare.outputs.meta }}
+          BUILD_RESULT: ${{ needs.build.result }}
+          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: python .github/agent/maintainer.py finish
