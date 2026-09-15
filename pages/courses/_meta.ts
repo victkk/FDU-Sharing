@@ -26,6 +26,7 @@ export default {
   'shujukuyinlun': '🗄️ 数据库引论',
   'moshudianshiyan': '🔧 模数电实验',
   'rengongzhinengjichu': '🤖 人工智能基础',
+  'rengongzhinengH': '🤖 人工智能 H（郑骁庆）',
   'daishujiegouyushuliluoji': '📚 代数结构与数理逻辑',
   'ziranyuyanchuli': '🤖 自然语言处理',
 
